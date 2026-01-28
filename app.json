@@ -1,0 +1,61 @@
+{
+  "expo": {
+    "name": "Kuanto",
+    "slug": "app",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "automatic",
+    "newArchEnabled": false,
+    "splash": {
+      "image": "./assets/splash-icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#1c1c1e"
+    },
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/kuanto-adaptive-icon.png",
+        "backgroundColor": "#0d1a14"
+      },
+      "edgeToEdgeEnabled": true,
+      "package": "com.aleneytor.app"
+    },
+    "web": {
+      "favicon": "./assets/icon.png",
+      "name": "Kuanto",
+      "shortName": "Kuanto",
+      "description": "Tasa del dólar y mercados en Venezuela",
+      "display": "standalone",
+      "startUrl": "/",
+      "backgroundColor": "#1c1c1e",
+      "themeColor": "#02DF82",
+      "orientation": "portrait",
+      "dir": "ltr",
+      "lang": "es-VE",
+      "barStyle": "black",
+      "splash": {
+        "image": "./assets/splash-icon.png",
+        "resizeMode": "contain",
+        "backgroundColor": "#1c1c1e"
+      }
+    },
+    "plugins": [
+      [
+        "react-native-google-mobile-ads",
+        {
+          "androidAppId": "ca-app-pub-7187537412845196~7858770063"
+        }
+      ],
+      "@react-native-community/datetimepicker"
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "0b90e25d-bbb6-4378-a85c-7254fbfe009b"
+      }
+    },
+    "owner": "aleneytor"
+  }
+}

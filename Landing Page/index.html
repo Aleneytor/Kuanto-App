@@ -1,0 +1,1149 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kuanto - La App que necesitas</title>
+
+    <!-- Mobile Redirection Script -->
+    <script>
+        (function () {
+            // Check if user agent indicates a mobile device
+            // Exclude tablets (iPad, Android tablets usually have larger width)
+            // Or prioritize checking specific mobile strings + max touch points
+            const isMobile = /Android|webOS|iPhone|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) && !/iPad/i.test(navigator.userAgent);
+
+            // Allow override via query param ?noredirect=true for debugging/desktop mode on mobile
+            const urlParams = new URLSearchParams(window.location.search);
+            const noRedirect = urlParams.get('noredirect');
+
+            if (isMobile && !noRedirect) {
+                // Redirect to the app
+                window.location.href = '/app';
+            }
+        })();
+    </script>
+
+    <meta name="description"
+        content="En Venezuela, saber el precio de hoy es vital, pero entender cómo cambió es poder. Kuanto te muestra las tasas del BCV, Euro y USDT al día.">
+
+    <!-- Monetag Verification -->
+    <meta name="monetag" content="d0f0832e823701d86e82b861314eb1dd">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://kuanto.online/">
+    <meta property="og:title" content="Kuanto - La App que necesitas">
+    <meta property="og:description"
+        content="En Venezuela, saber el precio de hoy es vital, pero entender cómo cambió es poder. Kuanto te muestra las tasas del BCV, Euro y USDT al día.">
+    <meta property="og:image" content="/banner.jpg">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://kuanto.online/">
+    <meta property="twitter:title" content="Kuanto - La App que necesitas">
+    <meta property="twitter:description"
+        content="En Venezuela, saber el precio de hoy es vital, pero entender cómo cambió es poder. Kuanto te muestra las tasas del BCV, Euro y USDT al día.">
+    <meta property="twitter:image" content="/banner.jpg">
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="icon" type="image/png" href="favicon.png">
+    <!-- PWA Icons for Home Screen Installation -->
+    <link rel="apple-touch-icon" href="icon.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="icon.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="icon.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="icon.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Kuanto">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-green: #02DF82;
+            --dark-bg: #0A0A0A;
+            --dark-card: #1A1A1A;
+            --text-white: #FFFFFF;
+            --text-gray: #B0B0B0;
+            --gradient-start: #02DF82;
+            --gradient-end: #00B86D;
+        }
+
+        body {
+            font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: var(--dark-bg);
+            color: var(--text-white);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* Animated background gradient */
+        .animated-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: radial-gradient(circle at 20% 50%, rgba(0, 217, 163, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(0, 217, 163, 0.1) 0%, transparent 50%);
+            animation: gradientShift 15s ease infinite;
+        }
+
+        @keyframes gradientShift {
+
+            0%,
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+
+            50% {
+                opacity: 0.8;
+                transform: scale(1.1);
+            }
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 2rem 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            background: transparent;
+        }
+
+        .nav-container {
+            background: rgba(60, 60, 60, 0.8);
+            backdrop-filter: blur(10px);
+            border-radius: 50px;
+            padding: 0.5rem;
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+        }
+
+        .nav-link {
+            color: var(--text-white);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 1rem;
+            padding: 0.75rem 2rem;
+            border-radius: 50px;
+            background: transparent;
+            transition: background 0.3s ease;
+        }
+
+        .nav-link:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .cta-button {
+            background: var(--primary-green);
+            color: #000000;
+            padding: 0.75rem 2.5rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 1rem;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .cta-button:hover {
+            background: #00B86D;
+            transform: scale(1.05);
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 5%;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-content {
+            max-width: 1400px;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .hero-text {
+            text-align: center;
+            z-index: 5;
+            max-width: 800px;
+        }
+
+        .hero-tagline {
+            font-size: 2.5rem;
+            font-weight: 300;
+            color: var(--text-white);
+            margin-bottom: 3rem;
+            letter-spacing: -0.5px;
+            white-space: nowrap;
+        }
+
+        .hero-tagline .highlight {
+            color: var(--primary-green);
+            font-weight: 700;
+            font-style: italic;
+        }
+
+        .hero-logo {
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto 3rem;
+        }
+
+        .hero-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            line-height: 1.3;
+            margin-bottom: 3rem;
+            background: linear-gradient(135deg, var(--text-white), var(--primary-green));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            display: none;
+        }
+
+        .hero-cta {
+            display: flex;
+            justify-content: center;
+        }
+
+        .hero-cta .cta-button {
+            padding: 1rem 3rem;
+            font-size: 1.1rem;
+        }
+
+        /* Phone Mockups - Static with subtle float */
+        .phone {
+            position: absolute;
+            height: auto;
+            z-index: 1;
+            animation: subtleFloat 8s ease-in-out infinite;
+        }
+
+        @keyframes subtleFloat {
+
+            0%,
+            100% {
+                transform: translateY(-50%);
+            }
+
+            50% {
+                transform: translateY(calc(-50% - 10px));
+            }
+        }
+
+        /* Phone 2 - Tasas del Día (Izquierda) */
+        .phone-1 {
+            width: 340px;
+            left: 1%;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        /* Phone 1 - Historial (Derecha, inclinado) */
+        .phone-2 {
+            width: 380px;
+            right: 0%;
+            top: 50%;
+            transform: translateY(-50%) rotate(8deg);
+            animation: subtleFloatRotated 8s ease-in-out infinite 1s;
+        }
+
+        @keyframes subtleFloatRotated {
+
+            0%,
+            100% {
+                transform: translateY(-50%) rotate(8deg);
+            }
+
+            50% {
+                transform: translateY(calc(-50% - 10px)) rotate(8deg);
+            }
+        }
+
+        /* Phone 3 - Hidden */
+        .phone-3 {
+            display: none;
+        }
+
+        /* About Section - Green Background */
+        .about {
+            padding: 6rem 5%;
+            background: linear-gradient(135deg, var(--primary-green) 0%, #00F593 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .about-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: block;
+            position: relative;
+            z-index: 2;
+        }
+
+        .about-content {
+            text-align: left;
+            max-width: 65%;
+            padding-right: 2rem;
+            position: relative;
+            z-index: 10;
+        }
+
+        .about-title {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 2rem;
+            color: #000000;
+            line-height: 1.2;
+        }
+
+        .about-text {
+            font-size: 1.25rem;
+            color: #1A1A1A;
+            line-height: 1.9;
+            margin-bottom: 1.8rem;
+            font-weight: 500;
+        }
+
+        .about-text.highlight {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: #000000;
+        }
+
+        .about-phone {
+            position: absolute;
+            right: 5%;
+            bottom: 0;
+            height: 100%;
+            display: flex;
+            align-items: flex-end;
+            z-index: 1;
+        }
+
+        .about-phone img {
+            height: 100%;
+            width: auto;
+            max-height: 100%;
+            object-fit: contain;
+            object-position: bottom;
+        }
+
+        /* Features Section */
+        .features {
+            padding: 6rem 5%;
+            background: #0A0A0A;
+            position: relative;
+        }
+
+        .features-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 4rem;
+            color: #01E989;
+            font-weight: 800;
+        }
+
+        .section-subtitle {
+            display: none;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .feature-card {
+            background: rgba(26, 26, 26, 0.5);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 2.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--primary-green);
+            box-shadow: 0 20px 60px rgba(0, 217, 163, 0.2);
+        }
+
+        .feature-icon {
+            width: 60px;
+            height: 60px;
+            background: rgba(1, 233, 137, 0.1);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .feature-icon svg {
+            width: 32px;
+            height: 32px;
+            stroke: #01E989;
+            stroke-width: 2;
+        }
+
+        .feature-card:hover .feature-icon {
+            background: #01E989;
+            transform: scale(1.1);
+        }
+
+        .feature-card:hover .feature-icon svg {
+            stroke: #000000;
+        }
+
+        .feature-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--primary-green);
+        }
+
+        .feature-description {
+            color: var(--text-gray);
+            line-height: 1.8;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .nav-container {
+                padding: 0.4rem;
+            }
+
+            .nav-link {
+                padding: 0.6rem 1.5rem;
+                font-size: 0.9rem;
+            }
+
+            .cta-button {
+                padding: 0.6rem 2rem;
+                font-size: 0.9rem;
+            }
+
+            .hero-tagline {
+                font-size: 2rem;
+            }
+
+            .hero-logo {
+                max-width: 500px;
+            }
+
+            .hero-text {
+                max-width: 700px;
+            }
+
+            .phone-1 {
+                width: 260px;
+                left: 0%;
+            }
+
+            .phone-2 {
+                width: 300px;
+                right: -2%;
+            }
+        }
+
+        /* Footer Section */
+        .footer {
+            background-color: #FFFFFF;
+            padding: 5rem 5% 3rem;
+            color: #000000;
+        }
+
+        /* Success Floating Card Styles */
+        .success-card {
+            position: fixed;
+            top: 20px;
+            right: -400px;
+            /* Hidden initially */
+            background: white;
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            z-index: 9999;
+            transition: right 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border-left: 5px solid #02DF82;
+            max-width: 90%;
+            width: 350px;
+        }
+
+        .success-card.active {
+            right: 20px;
+        }
+
+        .success-icon {
+            background: #02DF82;
+            color: white;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .success-content h4 {
+            margin: 0;
+            color: #333;
+            font-size: 1rem;
+            font-weight: 700;
+            margin-bottom: 2px;
+        }
+
+        .success-content p {
+            margin: 0;
+            color: #666;
+            font-size: 0.85rem;
+            line-height: 1.3;
+        }
+
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+        }
+
+        .footer-logo-section {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .footer-logo {
+            height: 60px;
+            width: auto;
+            align-self: flex-start;
+        }
+
+        .footer-social-links {
+            display: flex;
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .social-link {
+            width: 40px;
+            height: 40px;
+            background: #f0f0f0;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            color: #000000;
+        }
+
+        .social-link:hover {
+            background: #02DF82;
+            color: white;
+            transform: translateY(-3px);
+        }
+
+        .social-link svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .footer-form-section h3 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            color: #000000;
+        }
+
+        .footer-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .form-input,
+        .form-textarea {
+            padding: 1rem;
+            border: 1px solid #e0e0e0;
+            border-radius: 12px;
+            background: #f9f9f9;
+            font-family: 'Poppins', sans-serif;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-input:focus,
+        .form-textarea:focus {
+            outline: none;
+            border-color: #02DF82;
+            background: #fff;
+        }
+
+        .form-textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        .submit-btn {
+            background: #02DF82;
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            align-self: flex-start;
+        }
+
+        .submit-btn:hover {
+            background: #00B86D;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(2, 223, 130, 0.3);
+        }
+
+        .footer-bottom {
+            margin-top: 4rem;
+            padding-top: 2rem;
+            border-top: 1px solid #eee;
+            text-align: center;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 900px) {
+            .features-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .footer-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-container {
+                padding: 0.3rem;
+            }
+
+            .nav-link {
+                padding: 0.5rem 1rem;
+                font-size: 0.85rem;
+            }
+
+            .cta-button {
+                padding: 0.5rem 1.5rem;
+                font-size: 0.85rem;
+            }
+
+            .hero-tagline {
+                font-size: 1.5rem;
+                white-space: normal;
+            }
+
+            .hero-logo {
+                max-width: 350px;
+            }
+
+            .hero-cta .cta-button {
+                padding: 0.9rem 2.5rem;
+                font-size: 1rem;
+            }
+
+            .phone {
+                display: none;
+            }
+
+            .about-container {
+                padding: 0 1rem;
+            }
+
+            .about-content {
+                max-width: 100%;
+                text-align: center;
+                padding-right: 0;
+            }
+
+            .about-title {
+                font-size: 2.5rem;
+            }
+
+            .about-text {
+                font-size: 1rem;
+            }
+
+            .about-text.highlight {
+                font-size: 1.1rem;
+            }
+
+            .about-phone {
+                display: none;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="animated-bg"></div>
+
+    <!-- Navigation -->
+    <nav id="navbar">
+        <div class="nav-container">
+            <div class="nav-links">
+                <a href="#quienes-somos" class="nav-link">¿Por Qué?</a>
+                <a href="#caracteristicas" class="nav-link">Características</a>
+                <a href="#comentarios" class="nav-link">Comentarios</a>
+                <a href="https://kuanto.online/app" class="cta-button">Ver App</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero" id="inicio">
+        <div class="hero-content">
+            <div class="hero-text">
+                <p class="hero-tagline">No preguntes <span class="highlight">¡¿Cuanto?!</span> mejor revisa</p>
+                <img src="Logo nombre completo.png" alt="Kuanto" class="hero-logo">
+                <div class="hero-cta">
+                    <a href="https://kuanto.online/app" class="cta-button">Ver App</a>
+                </div>
+            </div>
+
+            <!-- Phones -->
+            <img src="Phone 2.png" alt="Kuanto App - Tasas del Día" class="phone phone-1">
+            <img src="Phone 1.png" alt="Kuanto App - Historial de Precios" class="phone phone-2">
+            <img src="Phone 3.png" alt="Kuanto App - Promedio USDT" class="phone phone-3">
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section class="about" id="quienes-somos">
+        <div class="about-container">
+            <div class="about-content">
+                <h2 class="about-title">El control de tu economía, hoy y siempre.</h2>
+                <p class="about-text highlight">
+                    En Venezuela, saber el precio de hoy es vital, pero entender cómo cambió es poder.
+                </p>
+                <p class="about-text">
+                    Por eso creamos Kuanto, mucho más que una simple calculadora. No solo te mostramos las tasas del
+                    BCV, Euro y USDT al día; somos la primera app diseñada para guardar un registro detallado de los
+                    cambios de precio en el USDT y permitirte consultar tasas de días anteriores.
+                </p>
+            </div>
+        </div>
+
+        <div class="about-phone">
+            <img src="Phone 4 Cut.png" alt="Kuanto App - Promedio USDT">
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features" id="caracteristicas">
+        <div class="features-container">
+            <h2 class="section-title">Características Principales</h2>
+
+            <div class="features-grid">
+                <!-- Card 1: Tasas en Tiempo Real -->
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round"
+                            stroke-linejoin="round">
+                            <path d="M12 20V10"></path>
+                            <path d="M18 20V4"></path>
+                            <path d="M6 20v-4"></path>
+                        </svg>
+                    </div>
+                    <h3 class="feature-title">Tasas en Tiempo Real</h3>
+                    <p class="feature-description">
+                        Consulta las tasas oficiales del BCV, Euro y USDT actualizadas al instante. Siempre tendrás la
+                        información más precisa.
+                    </p>
+                </div>
+
+                <!-- Card 2: Historial Completo -->
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round"
+                            stroke-linejoin="round">
+                            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+                        </svg>
+                    </div>
+                    <h3 class="feature-title">Historial Completo</h3>
+                    <p class="feature-description">
+                        Accede al historial detallado de cambios de precio del USDT. Visualiza tendencias y toma
+                        decisiones informadas.
+                    </p>
+                </div>
+
+                <!-- Card 3: Calculadora Inteligente -->
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round"
+                            stroke-linejoin="round">
+                            <rect x="4" y="2" width="16" height="20" rx="2"></rect>
+                            <line x1="8" y1="6" x2="16" y2="6"></line>
+                            <line x1="16" y1="14" x2="16" y2="18"></line>
+                            <path d="M8 10h.01"></path>
+                            <path d="M12 10h.01"></path>
+                            <path d="M16 10h.01"></path>
+                            <path d="M8 14h.01"></path>
+                            <path d="M12 14h.01"></path>
+                            <path d="M8 18h.01"></path>
+                            <path d="M12 18h.01"></path>
+                        </svg>
+                    </div>
+                    <h3 class="feature-title">Calculadora Inteligente</h3>
+                    <p class="feature-description">
+                        Convierte entre Bolívares, Dólares y Euros con un solo toque. Calcula rápidamente cualquier
+                        monto.
+                    </p>
+                </div>
+
+                <!-- Card 4: Registro Detallado -->
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round"
+                            stroke-linejoin="round">
+                            <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+                            <polyline points="17 21 17 13 7 13 7 21"></polyline>
+                            <polyline points="7 3 7 8 15 8"></polyline>
+                        </svg>
+                    </div>
+                    <h3 class="feature-title">Registro Detallado</h3>
+                    <p class="feature-description">
+                        Guarda automáticamente los cambios de precio. Consulta tasas de días, semanas o meses
+                        anteriores.
+                    </p>
+                </div>
+
+                <!-- Card 5: Diseño Elegante -->
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round"
+                            stroke-linejoin="round">
+                            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="feature-title">Diseño Elegante</h3>
+                    <p class="feature-description">
+                        Interfaz moderna y oscura que cuida tus ojos. Experiencia de usuario premium y fluida.
+                    </p>
+                </div>
+
+                <!-- Card 6: Rápido y Confiable -->
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round"
+                            stroke-linejoin="round">
+                            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+                        </svg>
+                    </div>
+                    <h3 class="feature-title">Rápido y Confiable</h3>
+                    <p class="feature-description">
+                        Datos precisos del Banco Central de Venezuela y fuentes verificadas. Información en la que
+                        puedes confiar.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- App Footer -->
+    <footer class="footer" id="comentarios">
+        <div class="footer-container">
+            <!-- Left Side: Logo & Social -->
+            <div class="footer-logo-section">
+                <img src="Logo nombre completo.png" alt="Kuanto Logo" class="footer-logo">
+                <p style="color: #666; font-size: 1.1rem; max-width: 400px; line-height: 1.6;">
+                    Ayúdanos a mejorar. Cuéntanos qué te gustaría ver en Kuanto y cómo te ayuda en tu día a día.
+                </p>
+                <div class="footer-social-links">
+                    <!-- Instagram -->
+                    <a href="https://instagram.com/kuanto.app/" class="social-link" aria-label="Instagram"
+                        target="_blank">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+                            <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+                            <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+                        </svg>
+                    </a>
+                    <!-- X -->
+                    <a href="#" class="social-link" aria-label="X">
+                        <svg viewBox="0 0 24 24" fill="currentColor" stroke="none">
+                            <path
+                                d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932ZM17.61 20.644h2.039L6.486 3.24H4.298Z">
+                            </path>
+                        </svg>
+                    </a>
+                    <!-- Threads -->
+                    <a href="https://www.threads.net/@kuanto.app" class="social-link" aria-label="Threads"
+                        target="_blank">
+                        <!-- Threads SVG -->
+                        <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" fill="currentColor">
+                            <path
+                                d="M47.346 29.663a22 22 0 0 0-.84-.381c-.494-9.103-5.467-14.314-13.819-14.367h-.113c-4.995 0-9.15 2.132-11.707 6.012l4.593 3.15c1.91-2.898 4.908-3.515 7.116-3.515h.077c2.75.017 4.824.817 6.167 2.376.978 1.135 1.631 2.704 1.955 4.683-2.438-.414-5.075-.542-7.893-.38-7.94.457-13.045 5.088-12.702 11.523.174 3.264 1.8 6.072 4.578 7.906 2.35 1.551 5.375 2.31 8.52 2.138 4.152-.228 7.41-1.812 9.682-4.71 1.726-2.2 2.818-5.05 3.3-8.643 1.979 1.195 3.446 2.766 4.256 4.656 1.377 3.211 1.457 8.489-2.849 12.792-3.773 3.769-8.308 5.4-15.163 5.45-7.603-.056-13.353-2.495-17.091-7.247-3.501-4.45-5.31-10.879-5.378-19.106.068-8.227 1.877-14.655 5.378-19.106 3.738-4.752 9.488-7.19 17.091-7.247 7.659.056 13.509 2.506 17.39 7.282 1.904 2.342 3.339 5.287 4.285 8.72l5.382-1.435c-1.146-4.227-2.95-7.869-5.406-10.89C49.179 3.202 41.901.065 32.523 0h-.037c-9.359.065-16.555 3.214-21.39 9.36C6.794 14.828 4.575 22.438 4.5 31.977v.045c.075 9.54 2.294 17.15 6.596 22.618 4.835 6.146 12.031 9.295 21.39 9.36h.037c8.32-.058 14.185-2.236 19.016-7.063 6.321-6.315 6.131-14.23 4.048-19.09-1.495-3.485-4.345-6.315-8.241-8.184M32.98 43.169c-3.48.196-7.095-1.366-7.273-4.712-.133-2.48 1.765-5.248 7.487-5.578q.982-.057 1.93-.056c2.078 0 4.022.202 5.79.588-.66 8.234-4.527 9.571-7.934 9.758"
+                                style="stroke-width:.333333" />
+                        </svg>
+                    </a>
+                    <!-- TikTok -->
+                    <a href="https://www.tiktok.com/@kuanto.app" class="social-link" aria-label="TikTok"
+                        target="_blank">
+                        <!-- TikTok SVG -->
+                        <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" fill="currentColor">
+                            <path
+                                d="M16.656 1.029c1.637-0.025 3.262-0.012 4.886-0.025 0.054 2.031 0.878 3.859 2.189 5.213l-0.002-0.002c1.411 1.271 3.247 2.095 5.271 2.235l0.028 0.002v5.036c-1.912-0.048-3.71-0.489-5.331-1.247l0.082 0.034c-0.784-0.377-1.447-0.764-2.077-1.196l0.052 0.034c-0.012 3.649 0.012 7.298-0.025 10.934-0.103 1.853-0.719 3.543-1.707 4.954l0.020-0.031c-1.652 2.366-4.328 3.919-7.371 4.011l-0.014 0c-0.123 0.006-0.268 0.009-0.414 0.009-1.73 0-3.347-0.482-4.725-1.319l0.040 0.023c-2.508-1.509-4.238-4.091-4.558-7.094l-0.004-0.041c-0.025-0.625-0.037-1.25-0.012-1.862 0.49-4.779 4.494-8.476 9.361-8.476 0.547 0 1.083 0.047 1.604 0.136l-0.056-0.008c0.025 1.849-0.050 3.699-0.050 5.548-0.423-0.153-0.911-0.242-1.42-0.242-1.868 0-3.457 1.194-4.045 2.861l-0.009 0.030c-0.133 0.427-0.21 0.918-0.21 1.426 0 0.206 0.013 0.41 0.037 0.61l-0.002-0.024c0.332 2.046 2.086 3.59 4.201 3.59 0.061 0 0.121-0.001 0.181-0.004l-0.009 0c1.463-0.044 2.733-0.831 3.451-1.994l0.010-0.018c0.267-0.372 0.45-0.822 0.511-1.311l0.001-0.014c0.125-2.237 0.075-4.461 0.087-6.698 0.012-5.036-0.012-10.060 0.025-15.083z">
+                            </path>
+                        </svg>
+                    </a>
+                    <!-- Email Copy -->
+                    <a href="#" class="social-link" id="emailCopyBtn" aria-label="Copiar Correo" title="Copiar Correo">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z">
+                            </path>
+                            <polyline points="22,6 12,13 2,6"></polyline>
+                        </svg>
+                    </a>
+                </div>
+
+                <!-- Legal Links -->
+                <div class="legal-links" style="margin-top: 1.5rem; display: flex; gap: 1rem; flex-wrap: wrap;">
+                    <a href="legal.html" class="legal-link"
+                        style="color: #666; font-size: 0.85rem; text-decoration: none; transition: color 0.3s;">Términos
+                        y Condiciones</a>
+                    <span style="color: #ddd;">|</span>
+                    <a href="legal.html#privacy" class="legal-link"
+                        style="color: #666; font-size: 0.85rem; text-decoration: none; transition: color 0.3s;">Privacidad</a>
+                    <span style="color: #ddd;">|</span>
+                    <a href="legal.html#disclaimer" class="legal-link"
+                        style="color: #666; font-size: 0.85rem; text-decoration: none; transition: color 0.3s;">Aviso
+                        Legal</a>
+                </div>
+                <style>
+                    .legal-link:hover {
+                        color: #02DF82 !important;
+                    }
+                </style>
+            </div>
+
+            <!-- Right Side: Contact Form -->
+            <div class="footer-form-section">
+                <h3>Envíanos tus comentarios</h3>
+                <form class="footer-form" action="https://formsubmit.co/info@kuanto.online" method="POST">
+                    <!-- Configuración FormSubmit -->
+                    <input type="hidden" name="_next" value="https://kuanto.online">
+                    <input type="hidden" name="_captcha" value="false">
+                    <input type="hidden" name="_subject" value="Nuevo Comentario desde Kuanto Landing">
+
+                    <div class="form-group">
+                        <input type="text" name="nombre" class="form-input" placeholder="Tu Nombre" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="email" name="email" class="form-input" placeholder="Tu Correo (Opcional)">
+                    </div>
+                    <div class="form-group">
+                        <textarea name="comentario" class="form-textarea"
+                            placeholder="¿Qué función te gustaría ver? ¿Cómo usas Kuanto?" required></textarea>
+                    </div>
+                    <button type="submit" class="submit-btn" style="position: relative;">Enviar Comentario</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <p>&copy; 2025 Kuanto App. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+
+    <!-- Floating Success Card HTML -->
+    <div id="successCard" class="success-card">
+        <div class="success-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"
+                stroke-linejoin="round" style="width: 18px; height: 18px;">
+                <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+        </div>
+        <div class="success-content">
+            <h4>¡Comentario Enviado!</h4>
+            <p>Gracias por tu feedback. Lo tomaremos en cuenta.</p>
+        </div>
+    </div>
+
+    <script>
+        // Reusable function to show floating success card
+        function showSuccessCard(title, message) {
+            const card = document.getElementById('successCard');
+            const titleEl = card.querySelector('.success-content h4');
+            const msgEl = card.querySelector('.success-content p');
+
+            if (titleEl) titleEl.textContent = title;
+            if (msgEl) msgEl.textContent = message;
+
+            card.classList.add('active');
+
+            // Hide after 4 seconds
+            setTimeout(() => {
+                card.classList.remove('active');
+            }, 4000);
+        }
+
+        // 1. Email Copy Functionality
+        document.getElementById('emailCopyBtn').addEventListener('click', function (e) {
+            e.preventDefault();
+            const email = "info@kuanto.online";
+
+            navigator.clipboard.writeText(email).then(() => {
+                showSuccessCard("¡Copiado!", "Correo de Contacto de Kuanto Copiado Exitosamente");
+            }).catch(err => {
+                console.error('Error al copiar:', err);
+                // Fallback for some browsers or if permission denied
+                prompt("Copia el correo manualmente:", email);
+            });
+        });
+
+        // 2. Handle Form Submission via AJAX
+        document.querySelector('.footer-form').addEventListener('submit', function (e) {
+            e.preventDefault(); // Stop redirect
+
+            const btn = this.querySelector('.submit-btn');
+            const originalText = btn.innerText;
+
+            btn.innerText = 'Enviando...';
+            btn.disabled = true;
+            btn.style.opacity = '0.7';
+
+            // Use FormSubmit's AJAX endpoint
+            fetch("https://formsubmit.co/ajax/info@kuanto.online", {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify(Object.fromEntries(new FormData(this)))
+            })
+                .then(response => {
+                    if (response.ok) {
+                        // Show Floating Success Card
+                        showSuccessCard("¡Comentario Enviado!", "Gracias por tu feedback. Lo tomaremos en cuenta.");
+
+                        // Clear form
+                        this.reset();
+                    } else {
+                        alert('Hubo un error al enviar. Intenta nuevamente.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Nota: Si estás probando desde un archivo local, el formulario no se enviará. Sube la página a la web para probar.');
+                })
+                .finally(() => {
+                    btn.innerText = originalText;
+                    btn.disabled = false;
+                    btn.style.opacity = '1';
+                });
+        });
+
+        // Smooth scroll for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Intersection Observer for fade-in animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        // Observe feature cards
+        document.querySelectorAll('.feature-card').forEach((card, index) => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(30px)';
+            card.style.transition = `all 0.6s ease ${index * 0.1}s`;
+            observer.observe(card);
+        });
+    </script>
+</body>
+
+</html>

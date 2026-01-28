@@ -1,0 +1,44 @@
+[build]
+  # Comando de build
+  command = "npm run build:web"
+  publish = "dist"
+  
+  # Ignorar builds automáticos - solo deployar cuando hay cambios en ciertos archivos
+  ignore = "git diff --quiet $CACHED_COMMIT_REF $COMMIT_REF ."
+
+# SPA Redirect - Rutas bajo /app/
+[[redirects]]
+  from = "/app/*"
+  to = "/app/index.html"
+  status = 200
+
+# Redirects de conveniencia - Rutas sin /app/ redirigen a /app/
+[[redirects]]
+  from = "/settings"
+  to = "/app/settings"
+  status = 301
+
+[[redirects]]
+  from = "/sources"
+  to = "/app/sources"
+  status = 301
+
+[[redirects]]
+  from = "/converter"
+  to = "/app/converter"
+  status = 301
+
+[[redirects]]
+  from = "/history"
+  to = "/app/history"
+  status = 301
+
+[[redirects]]
+  from = "/legal"
+  to = "/app/legal"
+  status = 301
+
+[[redirects]]
+  from = "/welcome"
+  to = "/app/welcome"
+  status = 301
