@@ -38,17 +38,20 @@ export const fetchAllRates = async () => {
         const todayFromFile = localRates.find(r => r.date === todayStr);
 
         // Try to get today's rate from Supabase (Scraper)
+        // We look for the latest rate that is <= today (to handle weekends/holidays)
         let scraperData = null;
         try {
             const { data, error } = await supabase
                 .from('bcv_rates_history')
-                .select('usd, eur')
-                .eq('date', todayStr)
+                .select('usd, eur, date')
+                .lte('date', todayStr)
+                .order('date', { ascending: false })
+                .limit(1)
                 .maybeSingle();
 
             if (data && !error) {
                 scraperData = data;
-                console.log('[RateService] Found rates in Supabase scraper history:', data);
+                console.log('[RateService] Found latest historical rates in Supabase:', data);
             }
         } catch (err) {
             console.warn('[RateService] Failed to check scraper history:', err);
@@ -58,6 +61,7 @@ export const fetchAllRates = async () => {
         // No external APIs needed - Vercel scraper feeds Supabase daily
         let usdBCV = scraperData?.usd || todayFromFile?.usd || 0;
         let eurBCV = scraperData?.eur || todayFromFile?.eur || 0;
+        let bcvDateFound = scraperData?.date || todayFromFile?.date || todayStr;
 
         if (scraperData) {
             console.log('[RateService] Using USD/EUR from Supabase (Vercel scraper)');
@@ -70,7 +74,7 @@ export const fetchAllRates = async () => {
 
         // Get recent history for display (last 14 days)
         const currentDayData = {
-            date: todayStr,
+            date: bcvDateFound,
             usd: usdBCV,
             eur: eurBCV
         };
@@ -134,10 +138,10 @@ export const fetchAllRates = async () => {
         // Merge: use fetched history
         const allHistoricalData = [...recentHistory];
 
-        // Update or add today's data
-        const todayIndex = allHistoricalData.findIndex(r => r.date === todayStr);
-        if (todayIndex >= 0) {
-            allHistoricalData[todayIndex] = currentDayData;
+        // Update or add current day data to history
+        const currentIndex = allHistoricalData.findIndex(r => r.date === currentDayData.date);
+        if (currentIndex >= 0) {
+            allHistoricalData[currentIndex] = currentDayData;
         } else {
             allHistoricalData.unshift(currentDayData);
         }
