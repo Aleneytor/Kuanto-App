@@ -18,7 +18,7 @@ rl.question('Escribe el mensaje para el commit: ', (answer) => {
         execSync(`git commit -m "${commitMsg.replace(/"/g, '\\"')}"`, { stdio: 'inherit' });
 
         console.log('🚀 Subiendo a GitHub...');
-        execSync('git push', { stdio: 'inherit' });
+        execSync('git push origin main', { stdio: 'inherit' });
 
         console.log('\n✅ ¡Todo listo! Los cambios se han subido.');
     } catch (error) {
