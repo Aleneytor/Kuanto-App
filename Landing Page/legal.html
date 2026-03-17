@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Legales - Kuanto App</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --primary-green: #02DF82;
+            --dark-bg: #0A0A0A;
+            --card-bg: #1A1A1A;
+            --text-white: #FFFFFF;
+            --text-gray: #B0B0B0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--dark-bg);
+            color: var(--text-white);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Navbar Simple */
+        .navbar {
+            padding: 1.5rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(10px);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .logo {
+            height: 40px;
+            width: auto;
+        }
+
+        .back-btn {
+            color: var(--text-white);
+            text-decoration: none;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: color 0.3s;
+        }
+
+        .back-btn:hover {
+            color: var(--primary-green);
+        }
+
+        /* Hero Legal */
+        .legal-hero {
+            text-align: center;
+            padding: 4rem 5% 2rem;
+        }
+
+        .legal-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: #02DF82;
+        }
+
+        /* Tab Navigation */
+        .legal-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 3rem;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--text-gray);
+            padding: 0.8rem 1.5rem;
+            border-radius: 50px;
+            cursor: pointer;
+            font-family: inherit;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .tab-btn.active,
+        .tab-btn:hover {
+            background: #E0E0E0;
+            color: #000;
+            border-color: #E0E0E0;
+        }
+
+        /* Content Container */
+        .content-wrapper {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 5% 5rem;
+        }
+
+        .legal-section {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .legal-section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .legal-card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 3rem;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        h2 {
+            color: var(--primary-green);
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        h2:first-child {
+            margin-top: 0;
+        }
+
+        h3 {
+            color: #fff;
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        p {
+            color: var(--text-gray);
+            margin-bottom: 1rem;
+            font-size: 1.05rem;
+            text-align: justify;
+        }
+
+        ul {
+            margin-bottom: 1.5rem;
+            padding-left: 1.5rem;
+            color: var(--text-gray);
+        }
+
+        li {
+            margin-bottom: 0.5rem;
+        }
+
+        /* Footer Simple */
+        .simple-footer {
+            text-align: center;
+            padding: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 768px) {
+            .legal-card {
+                padding: 1.5rem;
+            }
+
+            .legal-title {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar">
+        <a href="index.html">
+            <img src="Logo nombre completo.png" alt="Kuanto" class="logo">
+        </a>
+        <a href="index.html" class="back-btn">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path d="M19 12H5M12 19l-7-7 7-7" />
+            </svg>
+            Volver
+        </a>
+    </nav>
+
+    <!-- Header -->
+    <header class="legal-hero">
+        <h1 class="legal-title">Centro Legal</h1>
+        <div class="legal-tabs">
+            <button class="tab-btn active" onclick="switchTab('terms')">Términos y Condiciones</button>
+            <button class="tab-btn" onclick="switchTab('privacy')">Política de Privacidad</button>
+            <button class="tab-btn" onclick="switchTab('disclaimer')">Aviso Legal</button>
+        </div>
+    </header>
+
+    <!-- Content -->
+    <div class="content-wrapper">
+
+        <!-- Terms Section -->
+        <article id="terms" class="legal-section active">
+            <div class="legal-card">
+                <h2>Términos y Condiciones</h2>
+                <p>Última actualización: Enero 2025</p>
+
+                <p>Bienvenido a Kuanto. Al utilizar nuestra aplicación y servicios, aceptas los siguientes términos
+                    diseñados para asegurar la mejor experiencia para todos.</p>
+
+                <h3>1. Uso del Servicio</h3>
+                <p>Kuanto proporciona información financiera y herramientas de cálculo para uso personal. Nos esforzamos
+                    por la precisión, pero los datos provienen de fuentes oficiales (BCV) y mercados externos.</p>
+
+                <h3>2. Cuentas de Usuario</h3>
+                <p>Para acceder a ciertas funciones avanzadas como el historial detallado, es posible que necesites
+                    registrarte. Eres responsable de mantener la seguridad de tu cuenta.</p>
+
+                <h3>3. Propiedad Intelectual</h3>
+                <p>Todo el diseño, interfaz y código de Kuanto son propiedad exclusiva de nuestro equipo. El uso no
+                    autorizado está prohibido.</p>
+
+                <h3>4. Limitación de Responsabilidad</h3>
+                <p>Kuanto no se hace responsable por decisiones financieras tomadas basadas en la información mostrada.
+                    Siempre verifica con fuentes oficiales para transacciones críticas.</p>
+            </div>
+        </article>
+
+        <!-- Privacy Section -->
+        <article id="privacy" class="legal-section">
+            <div class="legal-card">
+                <h2>Política de Privacidad</h2>
+                <p>En Kuanto, tu privacidad es sagrada. No vendemos tus datos.</p>
+
+                <h3>1. Qué información recopilamos</h3>
+                <p>Recopilamos información básica para mejorar tu experiencia, como preferencias de configuración y
+                    datos de uso anónimos para análisis de rendimiento.</p>
+                <ul>
+                    <li>Datos de dispositivo (Modelo, OS) para optimización.</li>
+                    <li>Preferencias de moneda y configuración de la app.</li>
+                    <li>Comentarios enviados voluntariamente a través de nuestro formulario.</li>
+                </ul>
+
+                <h3>2. Uso de la información</h3>
+                <p>Utilizamos estos datos exclusivamente para:</p>
+                <ul>
+                    <li>Mejorar la estabilidad y velocidad de la aplicación.</li>
+                    <li>Responder a tus solicitudes de soporte.</li>
+                    <li>Notificarte sobre actualizaciones importantes (si aceptas recibirlas).</li>
+                </ul>
+
+                <h3>3. Seguridad</h3>
+                <p>Implementamos medidas de seguridad estándar de la industria para proteger tus datos contra acceso no
+                    autorizado.</p>
+
+                <h3>4. Contacto</h3>
+                <p>Si tienes dudas sobre tu privacidad, escríbenos a info@kuanto.online.</p>
+            </div>
+        </article>
+
+        <!-- Disclaimer Section -->
+        <article id="disclaimer" class="legal-section">
+            <div class="legal-card">
+                <h2>Aviso Legal</h2>
+                <p>La información mostrada en esta aplicación tiene un carácter <strong>exclusivamente
+                        informativo</strong>. Kuanto no representa ni está afiliado a ninguna entidad gubernamental y no
+                    establece ninguna de las tasas aquí publicadas. La única tasa oficial en Venezuela es la publicada
+                    por el <strong>Banco Central de Venezuela (BCV)</strong>, disponible en su sitio web oficial.</p>
+
+                <a href="http://www.bcv.org.ve" target="_blank"
+                    style="display: inline-block; background: rgba(2, 223, 130, 0.1); color: #02DF82; padding: 0.5rem 1rem; border-radius: 5px; text-decoration: none; font-weight: 600; margin-bottom: 1.5rem; transition: all 0.3s;">Visitar
+                    bcv.org.ve ↗</a>
+
+                <p>En la aplicación, la tasa oficial del BCV se actualiza tras su publicación oficial en los días
+                    hábiles. Esta tasa solo se refleja en la calculadora cuando entra en vigencia según lo indicado
+                    oficialmente por el BCV.</p>
+
+                <p>Se muestra asimismo una referencia del valor del <strong>USDT (Tether)</strong> frente al bolívar,
+                    calculada a partir de un promedio estadístico de anuncios en mercados P2P. El USDT es una
+                    stablecoin, pero no es dinero fiduciario ni debe interpretarse como una tasa oficial del dólar
+                    estadounidense. (1 USDT ≈ 1 USD, pero puede variar).</p>
+
+                <p>La Tasa USDT mostrada se debe entender únicamente como una <strong>referencia estadística</strong>.
+                    En los mercados digitales P2P no existe un precio único, sino rangos de valores dinámicos. Por lo
+                    tanto, la cifra mostrada no equivale a un precio garantizado ni constituye una recomendación
+                    financiera.</p>
+
+                <p>Esta aplicación no intermedia operaciones, no fija precios y no mantiene afiliación ni respaldo con
+                    ninguna plataforma de intercambio. El uso de esta información queda bajo la responsabilidad
+                    exclusiva del usuario.</p>
+            </div>
+        </article>
+
+    </div>
+
+    <footer class="simple-footer">
+        <p>&copy; 2025 Kuanto App. Todos los derechos reservados.</p>
+    </footer>
+
+    <script>
+        function switchTab(tabId) {
+            // Remove active class from all contents
+            document.querySelectorAll('.legal-section').forEach(el => el.classList.remove('active'));
+            // Remove active class from all buttons
+            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+
+            // Activate selected content
+            document.getElementById(tabId).classList.add('active');
+            // Activate clicked button
+            event.target.classList.add('active');
+
+            // Smooth scroll top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Check URL hash to open correct tab on load
+        window.addEventListener('load', () => {
+            if (window.location.hash === '#privacy') {
+                switchTab('privacy');
+                document.querySelectorAll('.tab-btn')[1].classList.add('active');
+                document.querySelectorAll('.tab-btn')[0].classList.remove('active');
+            } else if (window.location.hash === '#disclaimer') {
+                switchTab('disclaimer');
+                document.querySelectorAll('.tab-btn')[2].classList.add('active');
+                document.querySelectorAll('.tab-btn')[0].classList.remove('active');
+            }
+        });
+    </script>
+</body>
+
+</html>

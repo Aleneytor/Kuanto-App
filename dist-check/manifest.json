@@ -1,0 +1,25 @@
+{
+    "name": "Kuanto",
+    "short_name": "Kuanto",
+    "description": "Tasa del dólar y mercados en Venezuela",
+    "start_url": "/",
+    "display": "standalone",
+    "scope": "/",
+    "background_color": "#1c1c1e",
+    "theme_color": "#02DF82",
+    "orientation": "portrait",
+    "icons": [
+        {
+            "src": "/icon.png",
+            "sizes": "192x192",
+            "type": "image/png",
+            "purpose": "any maskable"
+        },
+        {
+            "src": "/icon.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "any maskable"
+        }
+    ]
+}
