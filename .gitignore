@@ -43,3 +43,6 @@ yarn-error.*
 # Netlify
 .netlify/
 
+# zip de dist/ para subir a mano a Netlify Drop
+*.zip
+
