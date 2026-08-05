@@ -37,22 +37,12 @@ Tienes 2 opciones:
 
 ---
 
-## ⚠️ IMPORTANTE: Variables de Entorno
+## ℹ️ Credenciales de Supabase
 
-Si es la primera vez que conectas Netlify con este repo, o si el deploy falla, verifica que tengas las variables de entorno configuradas:
-
-### **Ir a Site Settings:**
-1. En tu sitio de Netlify, ve a **"Site configuration"** → **"Environment variables"**
-
-### **Agregar estas 2 variables:**
-
-| Variable | Valor | Dónde obtenerlo |
-|----------|-------|-----------------|
-| `EXPO_PUBLIC_SUPABASE_URL` | https://xxxxx.supabase.co | https://supabase.com/dashboard → Settings → API |
-| `EXPO_PUBLIC_SUPABASE_ANON_KEY` | eyJhbGci... | https://supabase.com/dashboard → Settings → API |
-
-### **Después de agregar variables:**
-- Ve a **Deploys** → **Trigger deploy** → **Deploy site**
+Las credenciales del backend (`src/database/supabaseClient.js`) están escritas directo en el
+código — es la publishable key del proyecto `kuanto-mobile`, pública por diseño y protegida
+por RLS. No hace falta configurar ninguna variable de entorno en Netlify para que el sitio
+tenga datos.
 
 ---
 

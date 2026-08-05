@@ -3,19 +3,15 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { createClient } from '@supabase/supabase-js';
 import { AppState } from 'react-native';
 
-const supabaseUrl = process.env.EXPO_PUBLIC_SUPABASE_URL;
-const supabaseKey = process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY;
-
-if (!supabaseUrl || !supabaseKey) {
-    console.warn(
-        '[Supabase] Falta EXPO_PUBLIC_SUPABASE_URL / EXPO_PUBLIC_SUPABASE_ANON_KEY. ' +
-        'Copia .env.example a .env.local (desarrollo) o configúralas en Netlify (Site configuration → Environment variables).'
-    );
-}
+// Proyecto "kuanto-mobile": el mismo backend Supabase que usa la app móvil
+// (tabla pública de solo lectura `daily_rates`, protegida por RLS). La
+// publishable key es pública por diseño, no requiere variables de entorno.
+const supabaseUrl = 'https://ghyznbisjcdmtuaelhmg.supabase.co';
+const supabaseKey = 'sb_publishable_cEBA0AOt9yrhP0-5Sp5bHw_AzkMQlFj';
 
 export const supabase = createClient(
-    supabaseUrl ?? 'https://mobile-backend-not-configured.invalid',
-    supabaseKey ?? 'sb_publishable_not_configured',
+    supabaseUrl,
+    supabaseKey,
     {
         auth: {
             storage: AsyncStorage,
