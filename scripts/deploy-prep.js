@@ -126,29 +126,10 @@ async function prepareDeployment() {
 
         // Eliminado reemplazo de mimeType porque usaremos PNG estándar
 
-        // 6. INJECT CRITICAL CSS & VIEWPORT FIX FOR IOS SAFARI
-        // (Expo export appears to reset index.html styles, so we re-inject them here)
-        const criticalCss = `
-    <style>
-      /* FIX: iOS Safari White Boxes & Overscroll */
-      * { box-sizing: border-box; }
-      html { height: 100%; height: 100dvh; width: 100%; background-color: #1c1c1e; overscroll-behavior: none; }
-      body { height: 100%; width: 100%; background-color: #1c1c1e; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; padding-top: env(safe-area-inset-top); padding-bottom: env(safe-area-inset-bottom); overflow: hidden; }
-      #root { height: 100%; width: 100%; display: flex; flex-direction: column; }
-    </style>`;
-
-        if (htmlContent.includes('</head>')) {
-            htmlContent = htmlContent.replace('</head>', `${criticalCss}\n</head>`);
-        }
-
-        // Fix Viewport for Notch (viewport-fit=cover)
-        // Replaces the standard Expo viewport tag
-        htmlContent = htmlContent.replace(
-            /<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" \/>/,
-            '<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, viewport-fit=cover, maximum-scale=1, user-scalable=no" />'
-        );
-
-        // 7. INJECT OPEN GRAPH & META TAGS (Link Previews)
+        // 6. INJECT OPEN GRAPH & META TAGS (Link Previews)
+        // El CSS crítico y el viewport con notch/safe-area ya vienen correctos
+        // desde web/index.html (plantilla que usa `expo export --platform web`),
+        // así que no hace falta re-inyectarlos acá.
         const metaTags = `
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">

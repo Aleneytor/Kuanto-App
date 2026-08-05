@@ -3,7 +3,7 @@
 ## ✅ Código Ya Subido a GitHub
 
 Tu código está actualizado en:
-**https://github.com/Aleneytor/al-cambio-app**
+**https://github.com/Aleneytor/Kuanto-App**
 
 ---
 
@@ -173,5 +173,5 @@ Antes de hacer el deploy, verifica:
 
 ---
 
-**URL de tu repo:** https://github.com/Aleneytor/al-cambio-app
+**URL de tu repo:** https://github.com/Aleneytor/Kuanto-App
 **Panel de Netlify:** https://app.netlify.com/sites

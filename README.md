@@ -1,4 +1,4 @@
-# Al Cambio App 🇻🇪
+# Kuanto 🇻🇪
 
 Aplicación móvil moderna y eficiente para consultar las tasas de cambio oficiales (BCV) y paralelas en Venezuela al instante. Diseñada para ofrecer una experiencia de usuario premium con una interfaz oscura y minimalista.
 
@@ -23,8 +23,8 @@ Aplicación móvil moderna y eficiente para consultar las tasas de cambio oficia
 
 1. **Clonar el repositorio**:
    ```bash
-   git clone https://github.com/Aleneytor/al-cambio-app.git
-   cd al-cambio-app
+   git clone https://github.com/Aleneytor/Kuanto-App.git
+   cd Kuanto-App
    ```
 
 2. **Instalar dependencias**:
@@ -56,7 +56,7 @@ Para generar un archivo instalable (`.apk`) para pruebas o distribución manual:
 
 ## Aviso Legal ⚖️
 
-La información mostrada en esta aplicación tiene un carácter exclusivamente informativo. **Al Cambio App** no representa ni está afiliado a ninguna entidad gubernamental. La única tasa oficial en Venezuela es la publicada por el Banco Central de Venezuela (BCV).
+La información mostrada en esta aplicación tiene un carácter exclusivamente informativo. **Kuanto** no representa ni está afiliado a ninguna entidad gubernamental. La única tasa oficial en Venezuela es la publicada por el Banco Central de Venezuela (BCV).
 
 ---
 Creado con ❤️ por **[Aleneytor]** - 2025

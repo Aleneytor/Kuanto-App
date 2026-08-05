@@ -8,7 +8,7 @@
 
 ### ✅ **1. Git y GitHub**
 - Git instalado en tu sistema
-- Repositorio conectado: https://github.com/Aleneytor/al-cambio-app
+- Repositorio conectado: https://github.com/Aleneytor/Kuanto-App
 - Código actualizado y sincronizado
 
 ### ✅ **2. Comandos Personalizados**
@@ -145,7 +145,7 @@ Ve a tu URL de Netlify (después del deploy)
 
 | Servicio | URL |
 |----------|-----|
-| **GitHub Repo** | https://github.com/Aleneytor/al-cambio-app |
+| **GitHub Repo** | https://github.com/Aleneytor/Kuanto-App |
 | **Netlify Dashboard** | https://app.netlify.com/sites |
 | **Supabase Dashboard** | https://supabase.com/dashboard |
 

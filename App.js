@@ -22,7 +22,6 @@ import * as Notifications from 'expo-notifications';
 
 // Screens
 import HomeScreen from './src/screens/HomeScreen';
-import ConverterScreen from './src/screens/ConverterScreen'; // Kept in case it's needed later, though not in main nav
 import SettingsScreen from './src/screens/SettingsScreen';
 import SourcesScreen from './src/screens/SourcesScreen';
 import LegalScreen from './src/screens/LegalScreen';

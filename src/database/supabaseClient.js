@@ -3,17 +3,28 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { createClient } from '@supabase/supabase-js';
 import { AppState } from 'react-native';
 
-const supabaseUrl = 'https://goiaxsdsrwxlebpsnbrx.supabase.co';
-const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdvaWF4c2Rzcnd4bGVicHNuYnJ4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjgyMzE4NTksImV4cCI6MjA4MzgwNzg1OX0.iW5CRoQ_gjvEqxUXkiHPxSpL8kWSdXzdQZmqyMt167I';
+const supabaseUrl = process.env.EXPO_PUBLIC_SUPABASE_URL;
+const supabaseKey = process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY;
 
-export const supabase = createClient(supabaseUrl, supabaseKey, {
-    auth: {
-        storage: AsyncStorage,
-        autoRefreshToken: false,
-        persistSession: false,
-        detectSessionInUrl: false,
-    },
-});
+if (!supabaseUrl || !supabaseKey) {
+    console.warn(
+        '[Supabase] Falta EXPO_PUBLIC_SUPABASE_URL / EXPO_PUBLIC_SUPABASE_ANON_KEY. ' +
+        'Copia .env.example a .env.local (desarrollo) o configúralas en Netlify (Site configuration → Environment variables).'
+    );
+}
+
+export const supabase = createClient(
+    supabaseUrl ?? 'https://mobile-backend-not-configured.invalid',
+    supabaseKey ?? 'sb_publishable_not_configured',
+    {
+        auth: {
+            storage: AsyncStorage,
+            autoRefreshToken: false,
+            persistSession: false,
+            detectSessionInUrl: false,
+        },
+    }
+);
 
 // Tells Supabase Auth to continuously refresh the session automatically
 // if the app is in the foreground. When this is added, you will continue

@@ -165,20 +165,6 @@ const SourcesScreen = ({ navigation }) => {
                         true,
                         null
                     )}
-
-                    <View style={[styles.divider, { backgroundColor: colors.divider }]} />
-
-                    {renderSource(
-                        'Yadio',
-                        require('../../assets/yadio-logo.png'),
-                        'COMPRA',
-                        rates.p2p?.yadio?.sell ? `Bs. ${formatCurrency(rates.p2p.yadio.sell)}` : null,
-                        'VENTA',
-                        rates.p2p?.yadio?.buy ? `Bs. ${formatCurrency(rates.p2p.yadio.buy)}` : null,
-                        'https://yadio.io/',
-                        true,
-                        null
-                    )}
                 </View>
 
                 <View style={[styles.noteContainer, { marginTop: 32 }]}>
