@@ -10,10 +10,20 @@ const axios = require('axios');
 const cheerio = require('cheerio');
 const https = require('https');
 
-// Agent que ignora errores de certificado SSL
+// Agent HTTPS. El BCV históricamente tenía problemas de certificado SSL.
+// ⚠️ `rejectUnauthorized: false` desactiva la verificación del certificado y
+// expone a ataques man-in-the-middle. Se mantiene como fallback temporal
+// controlado por una variable de entorno: si BCV_SSL_STRICT=1, se exige
+// certificado válido (recomendado en producción). Por defecto se mantiene
+// el comportamiento anterior para no romper el scraper si el BCV sigue con
+// problemas de certificado.
+const sslStrict = process.env.BCV_SSL_STRICT === '1';
 const httpsAgent = new https.Agent({
-    rejectUnauthorized: false
+    rejectUnauthorized: !sslStrict,
 });
+if (!sslStrict) {
+    console.warn('⚠️ BCV SSL verification DISABLED (BCV_SSL_STRICT!=1). MITM risk.');
+}
 
 module.exports = async (req, res) => {
     // CORS headers

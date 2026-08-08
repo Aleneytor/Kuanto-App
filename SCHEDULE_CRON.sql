@@ -1,5 +1,8 @@
 -- Programar el scraper para ejecutarse a las 5:00 PM VET (21:00 UTC)
--- REEMPLAZA 'TU_SERVICE_ROLE_KEY' CON TU CLAVE REAL DE SUPABASE (settings -> API -> service_role secret)
+-- ⚠️ ANTES DE EJECUTAR: reemplaza 'TU_SB_SECRET_AQUI' con tu clave real de
+-- Supabase (Settings → API → service_role secret). NUNCA subas la clave real
+-- al repositorio. Si la clave ya estaba commiteada, hay que rotarla en el
+-- dashboard de Supabase y purgar el historial de git.
 
 select cron.schedule(
   'bcv-scrape-5pm-daily',

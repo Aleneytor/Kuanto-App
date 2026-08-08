@@ -108,7 +108,7 @@ async function fetchBinanceRate() {
             });
             const json = await res.json();
             if (json.data && json.data.length > 0) {
-                const prices = json.data.map((item: any) => parseFloat(item.adv.price));
+                const prices = json.data.map((item: { adv: { price: string } }) => parseFloat(item.adv.price));
                 return prices.reduce((a: number, b: number) => a + b, 0) / prices.length;
             }
             return 0;
@@ -141,7 +141,7 @@ async function fetchBybitRate() {
             });
             const json = await res.json();
             if (json.result && json.result.items && json.result.items.length > 0) {
-                const prices = json.result.items.map((item: any) => parseFloat(item.price));
+                const prices = json.result.items.map((item: { price: string }) => parseFloat(item.price));
                 return prices.reduce((a: number, b: number) => a + b, 0) / prices.length;
             }
             return 0;

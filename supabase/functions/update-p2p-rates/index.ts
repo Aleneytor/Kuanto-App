@@ -113,7 +113,7 @@ async function fetchBinance(type: 'BUY' | 'SELL' = 'BUY') {
 
         const data = await response.json();
         if (data?.data?.length > 0) {
-            let prices = data.data.map((item: any) => parseFloat(item.adv.price));
+            let prices = data.data.map((item: { adv: { price: string } }) => parseFloat(item.adv.price));
 
             // Filter outliers (promoted ads with unrealistic prices)
             // Skip first price (usually the promoted ad) and calculate median of the rest
@@ -164,7 +164,7 @@ async function fetchBybit(type: 'BUY' | 'SELL' = 'BUY') {
 
         const data = await response.json();
         if (data?.result?.items?.length > 0) {
-            const prices = data.result.items.map((item: any) => parseFloat(item.price));
+            const prices = data.result.items.map((item: { price: string }) => parseFloat(item.price));
             return prices.reduce((a: number, b: number) => a + b, 0) / prices.length;
         }
         return 0;

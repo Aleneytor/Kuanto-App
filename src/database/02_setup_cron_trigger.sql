@@ -11,7 +11,10 @@ select cron.schedule(
     select
       net.http_post(
           url:='https://goiaxsdsrwxlebpsnbrx.supabase.co/functions/v1/update-p2p-rates',
-          -- Usamos tu Anon Key publica para autenticar la llamada
+          -- Usamos tu Anon Key publica para autenticar la llamada.
+          -- ⚠️ Reemplaza 'TU_PUBLISHABLE_KEY_AQUI' con tu clave publishable real
+          -- (Settings → API → publishable key). Aunque es pública por diseño,
+          -- no se debe commitear hardcodeada: cada entorno puede tener la suya.
           headers:='{"Content-Type": "application/json", "Authorization": "Bearer TU_PUBLISHABLE_KEY_AQUI"}'::jsonb,
           body:='{}'::jsonb
       ) as request_id;
