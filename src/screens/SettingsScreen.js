@@ -11,6 +11,8 @@ import {
     Bell,
     Star,
     FileText,
+    History,
+    RefreshCcw,
 } from 'lucide-react-native';
 import * as Haptics from 'expo-haptics';
 import { useRates } from '../context/RateContext';
@@ -22,7 +24,7 @@ import AdBanner from '../components/AdBanner';
 import NativeAdComponent from '../components/NativeAd';
 
 const SettingsScreen = ({ navigation }) => {
-    const { rates } = useRates();
+    const { rates, refreshRates } = useRates();
     const { showToast } = useToast();
     const { colors, themePreference, setTheme, isDark } = useTheme();
     const [notificationsEnabled, setNotificationsEnabled] = React.useState(false);
@@ -72,6 +74,50 @@ const SettingsScreen = ({ navigation }) => {
 
     const settingsSections = [
 
+        // Sección Consulta: Historial, Fuentes y Actualizar tasas — movidos acá
+        // desde el menú ☰ para simplificarlo, igual que en la app móvil.
+        {
+            title: 'Consulta',
+            items: [
+                {
+                    id: 'history',
+                    icon: <History size={20} color={colors.bcvGreen} />,
+                    label: 'Historial completo',
+                    subtitle: 'BCV y USDT día por día',
+                    onPress: () => {
+                        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+                        // El historial es un modal de Home, no una pantalla del stack.
+                        // popTo y no navigate: en React Navigation 7 navigate apila otro
+                        // Home en vez de volver al que ya existe, y Atrás terminaría
+                        // regresando a Configuración.
+                        navigation.popTo('Home', { openHistory: true });
+                    }
+                },
+                {
+                    id: 'sources',
+                    icon: <Database size={20} color={colors.bcvGreen} />,
+                    label: 'Fuentes de datos',
+                    subtitle: 'BCV, Binance, Bybit',
+                    onPress: () => {
+                        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+                        navigation.navigate('Sources');
+                    }
+                },
+                {
+                    id: 'refresh',
+                    icon: <RefreshCcw size={20} color={colors.bcvGreen} />,
+                    label: 'Actualizar tasas',
+                    subtitle: 'Vuelve a consultar el servidor',
+                    // refreshRates(true) ya avisa por toast en todos los casos
+                    // (éxito, espera por cooldown, sin conexión y error), así que
+                    // acá no se muestra ninguno: se duplicaría o se contradiría.
+                    onPress: async () => {
+                        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+                        await refreshRates(true);
+                    }
+                },
+            ]
+        },
         {
             title: 'General',
             items: [
@@ -83,16 +129,6 @@ const SettingsScreen = ({ navigation }) => {
                     type: 'switch',
                     value: notificationsEnabled,
                     onValueChange: toggleNotifications
-                },
-                {
-                    id: 'sources',
-                    icon: <Database size={20} color={colors.bcvGreen} />,
-                    label: 'Fuentes de datos',
-                    subtitle: 'BCV, Binance, Bybit',
-                    onPress: () => {
-                        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-                        navigation.navigate('Sources');
-                    }
                 },
             ]
         },

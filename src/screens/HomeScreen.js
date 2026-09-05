@@ -1,6 +1,6 @@
 import React, { useMemo, useRef, useState, useEffect } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, FlatList, Animated, Platform, Image, useWindowDimensions, ScrollView, ActivityIndicator, Pressable, LayoutAnimation, UIManager } from 'react-native';
-import { Banknote, RefreshCcw, TrendingUp, TrendingDown, DollarSign, History, ChevronRight, ChevronLeft, Info, WifiOff, Calendar as CalendarIcon, Settings, Coins, ArrowRight, ChevronDown, Share2, X, Euro, FileText, Menu, CalendarSearch } from 'lucide-react-native';
+import { Banknote, RefreshCcw, TrendingUp, TrendingDown, DollarSign, ChevronRight, ChevronLeft, Info, WifiOff, Calendar as CalendarIcon, Settings, Coins, ArrowRight, ChevronDown, Share2, X, Euro, FileText, Menu, CalendarSearch } from 'lucide-react-native';
 import * as Haptics from 'expo-haptics';
 import * as Clipboard from 'expo-clipboard';
 import { useTheme } from '../context/ThemeContext';
@@ -45,7 +45,7 @@ const CARD_LAYOUT_ANIMATION = {
     },
 };
 
-const HomeScreen = ({ navigation }) => {
+const HomeScreen = ({ navigation, route }) => {
     const { width, height: screenHeight } = useWindowDimensions();
     const { rates, loading, refreshRates, order, isOffline, getTimeSinceUpdate, usdtHistory, fetchUsdtHistoricalData, fetchHistoricalData } = useRates();
     const { colors, isDark } = useTheme();
@@ -73,6 +73,16 @@ const HomeScreen = ({ navigation }) => {
     const dateTooltipAnim = useRef(new Animated.Value(0)).current;
     const screenFade = useRef(new Animated.Value(0)).current;
     const tooltipTimeout = useRef(null);
+
+    // "Historial completo" se abre desde Configuración: esa pantalla vuelve a Home
+    // con el parámetro y acá se levanta el modal. El parámetro se limpia enseguida
+    // para que volver a Home más tarde no lo reabra solo.
+    const openHistoryParam = route?.params?.openHistory;
+    useEffect(() => {
+        if (!openHistoryParam) return;
+        setHistoryModalVisible(true);
+        navigation.setParams({ openHistory: undefined });
+    }, [openHistoryParam, navigation]);
 
     const toggleMenu = () => {
         const toValue = menuVisible ? 0 : 1;
@@ -672,6 +682,11 @@ const HomeScreen = ({ navigation }) => {
         </View>
     ), [FloatingDatePickerButton, HiddenWebDateInput, LogoElement, FloatingMenuButton]);
 
+    const MENU_ITEMS = [
+        { id: 'payment', label: 'Tus Datos', icon: <TusDatosIcon width={22} height={22} color={colors.textPrimary} /> },
+        { id: 'settings', label: 'Configuración', icon: <Settings size={22} color={colors.textPrimary} strokeWidth={2.2} /> },
+    ];
+
     const FloatingMenuOverlay = menuVisible && (
         <Pressable
             style={StyleSheet.absoluteFill}
@@ -709,31 +724,24 @@ const HomeScreen = ({ navigation }) => {
                     }
                 })
             }}>
-                {/* Menu Items */}
-                {[
-                    { id: 'payment', label: 'Tus Datos', icon: <TusDatosIcon width={22} height={22} color={colors.textPrimary} /> },
-                    { id: 'history', label: 'Ver Historial Completo', icon: <History size={22} color={colors.textPrimary} strokeWidth={2.2} /> },
-                    { id: 'refresh', label: 'Actualizar Tasas', icon: <RefreshCcw size={22} color={colors.textPrimary} strokeWidth={2.2} /> },
-                    { id: 'settings', label: 'Configuración', icon: <Settings size={22} color={colors.textPrimary} strokeWidth={2.2} /> },
-                    { id: 'legal', label: 'Aviso Legal', icon: <Info size={22} color={colors.textPrimary} strokeWidth={2.2} /> },
-                ].map((item, idx) => (
+                {/* Menu Items — solo "Tus Datos" y "Configuración", igual que la app
+                    móvil. Historial completo, Fuentes, Actualizar tasas y Aviso Legal
+                    viven dentro de Configuración para no saturar este menú. */}
+                {MENU_ITEMS.map((item, idx) => (
                     <TouchableOpacity
                         key={item.id}
                         onPress={() => {
                             Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
                             toggleMenu();
                             if (item.id === 'payment') setPaymentModalVisible(true);
-                            if (item.id === 'history') setHistoryModalVisible(true);
-                            if (item.id === 'refresh') refreshRates();
                             if (item.id === 'settings') navigation.navigate('Settings');
-                            if (item.id === 'legal') navigation.navigate('Legal');
                         }}
                         style={{
                             flexDirection: 'row',
                             alignItems: 'center',
                             paddingVertical: 14,
                             paddingHorizontal: 8,
-                            borderBottomWidth: idx === 4 ? 0 : 0.5,
+                            borderBottomWidth: idx === MENU_ITEMS.length - 1 ? 0 : 0.5,
                             borderBottomColor: 'rgba(255,255,255,0.08)',
                         }}
                     >

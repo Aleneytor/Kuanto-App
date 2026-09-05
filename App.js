@@ -163,11 +163,16 @@ function AppContent() {
 
   const linking = {
     prefixes: [
-      'https://kuanto.online/app',
+      'https://kuanto.online',
       'kuanto://',
-      'http://localhost:19006/app'
+      'http://localhost:19006'
     ],
     config: {
+      // La app se sirve bajo /app (la raíz es la Landing Page). En web los
+      // prefixes se ignoran —el dominio se toma del navegador—, así que el
+      // subpath tiene que declararse acá o React Navigation generaría rutas
+      // como /settings, que en producción dan 404.
+      path: 'app',
       screens: {
         Welcome: 'welcome',
         Home: '',

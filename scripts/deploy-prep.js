@@ -39,33 +39,7 @@ async function prepareDeployment() {
     }
     console.log('✅ Moved App build files to "dist/app/"');
 
-    // 3. Fix Absolute Paths in dist/app/index.html
-    // 4. Copiar carpeta assets si existe
-    if (fs.existsSync(path.join(DIST_DIR, 'assets'))) {
-        console.log('📂 Copiando carpeta assets a dist/app/assets...');
-        // Copiar recursivamente
-        try {
-            fs.cpSync(path.join(DIST_DIR, 'assets'), path.join(APP_DIR, 'assets'), { recursive: true });
-        } catch (e) {
-            // Node < 16.7 fallback
-            const copyRecursiveSync = (src, dest) => {
-                const exists = fs.existsSync(src);
-                const stats = exists && fs.statSync(src);
-                const isDirectory = exists && stats.isDirectory();
-                if (isDirectory) {
-                    if (!fs.existsSync(dest)) fs.mkdirSync(dest);
-                    fs.readdirSync(src).forEach((childItemName) => {
-                        copyRecursiveSync(path.join(src, childItemName), path.join(dest, childItemName));
-                    });
-                } else {
-                    fs.copyFileSync(src, dest);
-                }
-            };
-            copyRecursiveSync(path.join(DIST_DIR, 'assets'), path.join(APP_DIR, 'assets'));
-        }
-    }
-
-    // 5. Arreglar rutas absolutas en index.html de la APP
+    // 3. Arreglar rutas absolutas en index.html de la APP
     console.log('🔧 Ajustando rutas en dist/app/index.html...');
     const appIndexPath = path.join(APP_DIR, 'index.html');
     if (fs.existsSync(appIndexPath)) {
@@ -126,11 +100,47 @@ async function prepareDeployment() {
 
         // Eliminado reemplazo de mimeType porque usaremos PNG estándar
 
-        // 6. INJECT OPEN GRAPH & META TAGS (Link Previews)
-        // El CSS crítico y el viewport con notch/safe-area ya vienen correctos
-        // desde web/index.html (plantilla que usa `expo export --platform web`),
-        // así que no hace falta re-inyectarlos acá.
+        // 6. CSS CRÍTICO + VIEWPORT CON NOTCH (FIX: barras blancas en iOS Safari)
+        //
+        // `expo export --platform web` NO usa `web/index.html` como plantilla en
+        // este proyecto (no usa Expo Router, cuya personalización del HTML raíz
+        // sería `+html.tsx`). El HTML generado trae solo el `<style id="expo-reset">`
+        // de Expo, que fija alturas pero NO pinta fondo: `html`/`body` se quedan
+        // en blanco por defecto y iOS Safari tiñe de blanco sus barras superior
+        // e inferior a partir de ese fondo. Por eso hay que reinyectar esto acá.
+        const criticalCss = `
+    <style>
+      /* FIX: iOS Safari White Boxes & Overscroll */
+      :root { color-scheme: dark; accent-color: #02DF82; }
+      * { box-sizing: border-box; }
+      html { height: 100%; height: 100dvh; width: 100%; background-color: #1c1c1e; overscroll-behavior: none; }
+      body { height: 100%; width: 100%; background-color: #1c1c1e; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; padding-top: env(safe-area-inset-top); padding-bottom: env(safe-area-inset-bottom); overflow: hidden; }
+      #root { height: 100%; width: 100%; display: flex; flex-direction: column; background-color: #1c1c1e; }
+    </style>`;
+
+        if (htmlContent.includes('</head>')) {
+            htmlContent = htmlContent.replace('</head>', `${criticalCss}\n</head>`);
+        }
+
+        // El viewport de Expo no contempla el notch: sin `viewport-fit=cover` las
+        // safe areas quedan fuera del lienzo y `env(safe-area-inset-*)` vale 0.
+        // No se agrega `maximum-scale=1, user-scalable=no`: bloquear el zoom no
+        // hace falta para las barras y rompe la pauta WCAG 1.4.4 de escalado.
+        htmlContent = htmlContent.replace(
+            /<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" \/>/,
+            '<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, viewport-fit=cover" />'
+        );
+
+        // 7. INJECT OPEN GRAPH & META TAGS (Link Previews)
         const metaTags = `
+    <!-- PWA -->
+    <link rel="manifest" href="/app/manifest.json">
+    <link rel="apple-touch-icon" href="/app/apple-touch-icon.png?v=2">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Kuanto">
+
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://kuanto.online/app">
@@ -225,7 +235,7 @@ async function prepareDeployment() {
         console.warn('⚠️ Warning: Landing Page directory not found at:', LANDING_PAGE_DIR);
     }
 
-    // 4. Create SPA Configuration (Vercel & Netlify)
+    // 5. Create SPA Configuration (Vercel & Netlify)
     const vercelConfig = {
         rewrites: [
             {
@@ -236,7 +246,33 @@ async function prepareDeployment() {
     };
 
     fs.writeFileSync(path.join(DIST_DIR, 'vercel.json'), JSON.stringify(vercelConfig, null, 2));
-    fs.writeFileSync(path.join(DIST_DIR, '_redirects'), '/app/*  /app/index.html  200');
+
+    const notFoundHtml = '<!doctype html><html lang="es"><head><meta charset="utf-8"><title>Archivo no encontrado</title></head><body><h1>404</h1></body></html>';
+    fs.writeFileSync(path.join(APP_DIR, '404.html'), notFoundHtml);
+
+    // Un asset ausente debe devolver 404. Antes caía en el index de la SPA y
+    // Netlify respondía HTML con status 200 para fuentes o JavaScript faltante.
+    const redirects = [
+        '/app/assets/*  /app/404.html  404',
+        '/app/_expo/*   /app/404.html  404',
+        '/app/*         /app/index.html  200',
+        '',
+    ].join('\n');
+    fs.writeFileSync(path.join(DIST_DIR, '_redirects'), redirects);
+
+    const headers = [
+        '/app/_expo/static/*',
+        '  Cache-Control: public, max-age=31536000, immutable',
+        '  X-Content-Type-Options: nosniff',
+        '/app/assets/*',
+        '  Cache-Control: public, max-age=31536000, immutable',
+        '  X-Content-Type-Options: nosniff',
+        '/*',
+        '  Referrer-Policy: strict-origin-when-cross-origin',
+        '  X-Content-Type-Options: nosniff',
+        '',
+    ].join('\n');
+    fs.writeFileSync(path.join(DIST_DIR, '_headers'), headers);
 
     console.log('✅ Created SPA routing config (vercel.json, _redirects)');
 
