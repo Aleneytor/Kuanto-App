@@ -63,10 +63,15 @@ module.exports = async (req, res) => {
 
         console.log(`Raw data - USD: "${usdText}", EUR: "${eurText}", Date: "${dateContent}"`);
 
-        // Parse rates (BCV uses comma as decimal: "47,15" -> 47.15)
+        // Parse rates (BCV uses dot as thousands separator and comma as decimal: "1.004,12" -> 1004.12)
         const parseRate = (text) => {
             if (!text) return 0;
-            return parseFloat(text.replace(',', '.'));
+            const normalized = String(text)
+                .trim()
+                .replace(/\s+/g, '')
+                .replace(/\./g, '')
+                .replace(',', '.');
+            return parseFloat(normalized);
         };
 
         const usd = parseRate(usdText);
